@@ -10,11 +10,9 @@ const gitAll = (req, res) => {
 }
 
 const gitFav = (req, res) => {
-    userModel.findOne({ email: req.params.id }, (err, data) => {
+    userModel.findOne({ email: req.query.email }, (err, data) => {
         if (err) { res.send(err) } else {
             res.send(data.fav)
-
-
         }
     })
 }
@@ -27,29 +25,31 @@ const addFav = (req, res) => {
         usd: body.usd,
         img: body.img
     }
-    userModel.findOne({ email: req.params.id }, (err, data) => {
-        if (err) { res.send(err) } 
+    userModel.findOne({ email: req.query.email }, (err, data) => {
+        if (err) { res.send(err) }
         else {
             data.fav.push(newFav);
+            data.save()
             res.send(data.fav)
 
         }
     })
 }
 
-const editFav = (req,res)=>{
-    let body= req.body
-    userModel.findOne({ email: req.params.id }, (err, data) => {
-        if (err) { res.send(err) } 
+const editFav = (req, res) => {
+    let body = req.body
+    userModel.findOne({ email: req.query.email }, (err, data) => {
+        if (err) { res.send(err) }
         else {
-           data.fav.findbyIdandUpdate({_id : body.id}, { title: body.title,
-            desc: body.desc,
-            usd: body.usd,
-            img: body.img} , (err , data)=>{
+            data.fav.findbyIdandUpdate({ _id: req.params.id }, {
+                title: body.title,
+                desc: body.desc,
+                usd: body.usd
+            },(err, data) => {
                 if (err) { res.send(err) } else {
                     res.send(data.fav)
-        
-        
+
+
                 }
             })
 
@@ -57,23 +57,19 @@ const editFav = (req,res)=>{
     })
 }
 
-const  deleteFav =(req,res)=>{
-
-    let body= req.body
-    userModel.findOne({ email: req.params.id }, (err, data) => {
-        if (err) { res.send(err) } 
-        else {
-           data.fav.findbyIdandRemove({_id : body.id} , (err , data)=>{
-                if (err) { res.send(err) } else {
-                    res.send(data.fav)
-        
-        
-                }
-            })
-
+const deleteFav = (req, res) => {
+    let body = req.body
+    userModel.findOne({ email: req.query.email }, (err, data) => {
+        if (err) {
+            res.send(err)
+        } else {
+            data.fav.splice(+req.params.id, 1)
+            data.save();
+            res.send(data.fav)
         }
     })
+
 }
 
 
-module.exports = { gitAll, gitFav , addFav, editFav ,  deleteFav };
+module.exports = { gitAll, gitFav, addFav, editFav, deleteFav };

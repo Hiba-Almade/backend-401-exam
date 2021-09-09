@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
 
-const cryptoSchema= new mongoose.Schema({
-    title:String,
-    desc:String,
-    usd:String,
-    img:String
-})
 const userSchema= new mongoose.Schema({
-    email:String,
-    fav:[cryptoSchema]
+    email:{type:String},
+    fav:[
+        {
+            title:{type:String},
+            desc:{type:String},
+            usd:{type:String},
+            img:{type:String}
+        }
+    ]
 })
 
 
-const cryptoModel = mongoose.model('crypto', cryptoSchema);
+
 const userModel = mongoose.model('user', userSchema);
 
 // const newuser =()=>{
@@ -28,4 +29,4 @@ const userModel = mongoose.model('user', userSchema);
 //  newuser();
  
 
-module.exports={userModel , cryptoModel};
+module.exports={userModel};
